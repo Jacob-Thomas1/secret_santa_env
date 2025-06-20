@@ -4,7 +4,6 @@ import random
 from models.Employee import Employee
 from models.SecretSanta import SecretSanta
 
-
 def return_employee_list(file_path, previous_santa_file_path):
 
     try:
