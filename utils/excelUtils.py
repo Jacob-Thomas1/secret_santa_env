@@ -23,17 +23,25 @@ def return_employee_list(file_path, previous_santa_file_path):
         # Create Employee objects from the DataFrame
         employees = []
         for index, row in df.iterrows():
+            
+                
             name = row['Employee_Name'].strip()
             email = row['Employee_EmailID'].strip()
             
-            prev_name = df_previous.loc[df_previous['Employee_EmailID'] == email, 'Secret_Child_Name'].values[0]
-            prev_email = df_previous.loc[df_previous['Employee_EmailID'] == email, 'Secret_Child_EmailID'].values[0]
-            prev_santa = Employee(prev_name, prev_email) 
+            # Break if the name or email is empty
+            if not name or not email:
+                break
             
-            if name and email and prev_santa:
-                employees.append(Employee(name, email, prev_santa))
-            else:
-                raise ValueError(f"Invalid data at row {index + 1}: Name and Email or Previous Santa must not be empty.") 
+            prev_santa = Employee("None", "None")  # Default previous Santa if not found
+            # Check if the previous year's data is available
+            
+            #if the previous year's data is available, fetch the previous Secret Santa
+            if not(df_previous.loc[df_previous['Employee_EmailID'] == email, 'Secret_Child_Name'].empty):
+                prev_name = df_previous.loc[df_previous['Employee_EmailID'] == email, 'Secret_Child_Name'].values[0]
+                prev_email = df_previous.loc[df_previous['Employee_EmailID'] == email, 'Secret_Child_EmailID'].values[0]
+                prev_santa = Employee(prev_name, prev_email) 
+            
+            employees.append(Employee(name, email, prev_santa))
             
         print("\n           ******       Previous (2023) Secret Santa assignments:        ****** \n")
         for employee in employees:
